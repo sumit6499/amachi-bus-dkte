@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  web:
+    depends_on:
+      - api
+    build: ./client
+    ports:
+      - 5173:5173
+    environment:
+      VITE_API_URL: http://localhost:3000
+
+    develop:
+      watch:
+        - path: ./client/package.json
+          action: rebuild
+        - path: ./client/package-lock.json
+          action: rebuild
+
+        - path: ./client
+          target: /app
+          action: sync
+
+  api:
+    build: ./server
+    ports:
+      - 3000:3000
+    
+    develop:
+      watch:
+        - path: ./server/package.json
+          action: rebuild
+        - path: ./server/package-lock.json
+          action: rebuild
+
+        - path: ./server
+          target: /app
+          action: sync
+    environment:
+      - MONGODB_URL=mongodb+srv://sumitpadalkar53:7XrfOlJtp2C0vMH8@cluster0.lkhdf8m.mongodb.net/?retryWrites=true&w=majority
+  
+
